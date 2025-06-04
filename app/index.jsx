@@ -1,3 +1,4 @@
+// src/index.jsx
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -10,17 +11,14 @@ import {
   TextInput,
   TouchableOpacity
 } from 'react-native';
-import httpClient from './api/httpClient'; // Ajusta según tu estructura
+import httpClient from './api/httpClient';
 
 export default function Login() {
   const router = useRouter();
 
-  // Verifica que router esté disponible
   useEffect(() => {
     if (!router) {
       console.warn('router is undefined or null. Verifica la configuración de expo-router.');
-    } else {
-      console.log('router:', router);
     }
   }, [router]);
 
@@ -39,25 +37,43 @@ export default function Login() {
       const token = response.data.access_token ?? '';
       const role = response.data.role ?? [];
 
-      console.log('Respuesta login:', response.data);
-      console.log('Token:', token);
-      console.log('Role:', role);
+      console.log('Login response:', response.data);
 
       if (Array.isArray(role) && role.includes('cliente')) {
         await AsyncStorage.setItem('token', token);
         await AsyncStorage.setItem('role', 'cliente');
         Alert.alert('Bienvenido', 'Acceso concedido como cliente');
+
         if (router) {
           router.replace('/homecliente');
         } else {
-          Alert.alert('Error', 'No se pudo navegar: router no está disponible');
+          Alert.alert('Error', 'No se pudo navegar: router no disponible');
         }
       } else {
         Alert.alert('Acceso Denegado', 'Solo los clientes pueden iniciar sesión.');
       }
     } catch (error) {
       console.error('Login error:', error);
-      Alert.alert('Error', 'Credenciales inválidas o error de servidor.');
+
+      if (error.response) {
+        const status = error.response.status;
+        const data = error.response.data;
+
+        if (status === 422 && data.errors) {
+          const mensajes = Object.values(data.errors).flat().join('\n');
+          Alert.alert('Errores de validación', mensajes);
+        } else if (status === 401) {
+          Alert.alert('Error de autenticación', 'Correo o contraseña incorrectos.');
+        } else if (status >= 500) {
+          Alert.alert('Error del servidor', 'Inténtalo más tarde.');
+        } else {
+          Alert.alert('Error', data.message || 'Ocurrió un error inesperado.');
+        }
+      } else if (error.request) {
+        Alert.alert('Error de red', 'No se pudo conectar con el servidor.');
+      } else {
+        Alert.alert('Error', 'Ocurrió un error inesperado: ' + error.message);
+      }
     }
   };
 
