@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
   Platform,
@@ -10,51 +11,50 @@ import {
   TextInput,
   TouchableOpacity
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Feather'; // Importamos el ícono de Feather
+import Icon from 'react-native-vector-icons/Feather';
 import httpClient from './api/httpClient';
-
+ 
 export default function Login() {
   const router = useRouter();
-
+ 
   useEffect(() => {
     if (!router) {
       console.warn('router is undefined or null. Verifica la configuración de expo-router.');
     }
   }, [router]);
-
+ 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  // Estado para controlar el modo oscuro
   const [isDarkMode, setIsDarkMode] = useState(false);
-
-  // Función para alternar entre claro y oscuro
+  const [loading, setLoading] = useState(false); // <-- Estado para loading
+ 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
   };
-
-  // Obtenemos estilos dinámicos según el modo actual
+ 
   const styles = getStyles(isDarkMode);
-
+ 
   const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert('Error', 'Por favor ingresa email y contraseña');
       return;
     }
-
+ 
+    setLoading(true); // <-- Comenzar loading
+ 
     try {
       const response = await httpClient.post('/login', { email, password });
-
+ 
       const token = response.data.access_token ?? '';
       const role = response.data.role ?? [];
-
+ 
       console.log('Login response:', response.data);
-
+ 
       if (Array.isArray(role) && role.includes('cliente')) {
         await AsyncStorage.setItem('token', token);
         await AsyncStorage.setItem('role', 'cliente');
         Alert.alert('Bienvenido', 'Acceso concedido como cliente');
-
+ 
         if (router) {
           router.replace('/homecliente');
         } else {
@@ -65,11 +65,11 @@ export default function Login() {
       }
     } catch (error) {
       console.error('Login error:', error);
-
+ 
       if (error.response) {
         const status = error.response.status;
         const data = error.response.data;
-
+ 
         if (status === 422 && data.errors) {
           const mensajes = Object.values(data.errors).flat().join('\n');
           Alert.alert('Errores de validación', mensajes);
@@ -85,27 +85,26 @@ export default function Login() {
       } else {
         Alert.alert('Error', 'Ocurrió un error inesperado: ' + error.message);
       }
+    } finally {
+      setLoading(false); // <-- Finalizar loading
     }
   };
-
+ 
   return (
-    <KeyboardAvoidingView
+<KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      {/* Botón de sol/luna para cambiar entre modo claro y oscuro */}
-      <TouchableOpacity style={styles.themeToggle} onPress={toggleTheme}>
-        <Icon
-          name={isDarkMode ? 'sun' : 'moon'} // Cambia entre ícono de sol y luna
+>
+<TouchableOpacity style={styles.themeToggle} onPress={toggleTheme}>
+<Icon
+          name={isDarkMode ? 'sun' : 'moon'}
           size={24}
-          color={isDarkMode ? '#fcd34d' : '#1f2937'} // Color del ícono según el modo
+          color={isDarkMode ? '#fcd34d' : '#1f2937'}
         />
-      </TouchableOpacity>
-
-      {/* Título de la pantalla */}
+</TouchableOpacity>
+ 
       <Text style={styles.title}>Iniciar Sesión</Text>
-
-      {/* Campo de correo electrónico */}
+ 
       <TextInput
         style={styles.input}
         placeholder="Correo electrónico"
@@ -115,8 +114,7 @@ export default function Login() {
         value={email}
         onChangeText={setEmail}
       />
-
-      {/* Campo de contraseña */}
+ 
       <TextInput
         style={styles.input}
         placeholder="Contraseña"
@@ -125,28 +123,30 @@ export default function Login() {
         value={password}
         onChangeText={setPassword}
       />
-
-      {/* Botón para iniciar sesión */}
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Ingresar</Text>
-      </TouchableOpacity>
-    </KeyboardAvoidingView>
+ 
+      <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
+        {loading ? (
+<ActivityIndicator color="#fff" /> // <-- Indicador mientras carga
+        ) : (
+<Text style={styles.buttonText}>Ingresar</Text>
+        )}
+</TouchableOpacity>
+</KeyboardAvoidingView>
   );
 }
-
-// Función que devuelve los estilos dependiendo del modo claro/oscuro
+ 
 const getStyles = (isDarkMode) =>
   StyleSheet.create({
     container: {
       flex: 1,
       justifyContent: 'center',
       paddingHorizontal: 30,
-      backgroundColor: isDarkMode ? '#121212' : '#fff', // Fondo según tema
+      backgroundColor: isDarkMode ? '#121212' : '#fff',
     },
     themeToggle: {
       position: 'absolute',
       top: 50,
-      right: 20, // Esquina superior derecha
+      right: 20,
       zIndex: 10,
     },
     title: {
@@ -154,7 +154,7 @@ const getStyles = (isDarkMode) =>
       fontWeight: 'bold',
       marginBottom: 30,
       textAlign: 'center',
-      color: isDarkMode ? '#fff' : '#000', // Texto según tema
+      color: isDarkMode ? '#fff' : '#000',
     },
     input: {
       height: 50,
