@@ -1,9 +1,11 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'; // ¡IMPORTANTE!
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import {
   Image,
   ScrollView,
-  StyleSheet, Text,
+  StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
   View
@@ -39,7 +41,7 @@ export default function CategoriasCliente() {
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const token = await AsyncStorage.getItem('token'); // React Native storage
+        const token = await AsyncStorage.getItem('token');
         const response = await axios.get('http://localhost:8000/api/cliente/categorias', {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -165,7 +167,6 @@ export default function CategoriasCliente() {
       <NavbarCliente />
 
       <ScrollView contentContainerStyle={styles.content}>
-
         <Text style={styles.title}>Prendas disponibles</Text>
 
         {categorias.length === 0 ? (
@@ -276,7 +277,6 @@ export default function CategoriasCliente() {
             <Text>{mensaje}</Text>
           </View>
         )}
-
       </ScrollView>
 
       <Footer />

@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
   Platform,
@@ -24,12 +25,15 @@ export default function Login() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert('Error', 'Por favor ingresa email y contraseña');
       return;
     }
+
+    setLoading(true);
 
     try {
       const response = await httpClient.post('/login', { email, password });
@@ -74,6 +78,8 @@ export default function Login() {
       } else {
         Alert.alert('Error', 'Ocurrió un error inesperado: ' + error.message);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -100,8 +106,16 @@ export default function Login() {
         onChangeText={setPassword}
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Ingresar</Text>
+      <TouchableOpacity
+        style={[styles.button, loading && { backgroundColor: '#a5b4fc' }]}
+        onPress={handleLogin}
+        disabled={loading}
+      >
+        {loading ? (
+          <ActivityIndicator size="small" color="#fff" />
+        ) : (
+          <Text style={styles.buttonText}>Ingresar</Text>
+        )}
       </TouchableOpacity>
     </KeyboardAvoidingView>
   );
