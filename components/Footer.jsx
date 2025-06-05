@@ -9,24 +9,24 @@ export default function Footer() {
 
   return (
     <View style={styles.footer}>
+      <View style={styles.iconContainer}>
+        <TouchableOpacity onPress={() => openLink('https://www.facebook.com/tu_pagina')}>
+          <FontAwesome name="facebook" size={32} color="#7c2d12" style={styles.icon} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => openLink('https://www.instagram.com/tu_usuario')}>
+          <FontAwesome name="instagram" size={32} color="#7c2d12" style={styles.icon} />
+        </TouchableOpacity>
+      </View>
       <Text style={styles.footerText}>
         © Equipo Carmabe Shop 2025 | Elegancia para cada día. Derechos reservados.
       </Text>
-      <View style={styles.iconContainer}>
-        <TouchableOpacity onPress={() => openLink('https://www.facebook.com/tu_pagina')}>
-          <FontAwesome name="facebook" size={24} color="#7c2d12" style={styles.icon} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => openLink('https://www.instagram.com/tu_usuario')}>
-          <FontAwesome name="instagram" size={24} color="#7c2d12" style={styles.icon} />
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   footer: {
-    padding: 12,
+    padding: 16,
     backgroundColor: '#f9c5d1',
     justifyContent: 'center',
     alignItems: 'center',
@@ -37,18 +37,23 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 6,
     elevation: 5,
+    flexDirection: 'column',
   },
   footerText: {
     fontSize: 14,
     color: '#7c2d12',
     fontWeight: 'bold',
     textAlign: 'center',
+    marginTop: 8,
   },
   iconContainer: {
     flexDirection: 'row',
-    marginTop: 8,
+    justifyContent: 'center',
   },
   icon: {
-    marginHorizontal: 10,
+    marginHorizontal: 15,
   },
 });
+
+
+
