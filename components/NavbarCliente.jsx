@@ -1,67 +1,56 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter } from 'expo-router';
+import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export default function NavbarCliente() {
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    try {
-      await AsyncStorage.removeItem('token');
-      await AsyncStorage.removeItem('role');
-      router.replace('/');
-    } catch (error) {
-      console.error('Error al cerrar sesión:', error);
-    }
-  };
-
+export default function Navbar() {
   return (
     <View style={styles.navbar}>
-      <Text style={styles.title}>Panel Cliente</Text>
-
-      <View style={styles.linksContainer}>
-        <TouchableOpacity onPress={() => router.push('/cliente/categorias')}>
-          <Text style={styles.link}>Prendas</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => router.push('/cliente/metodos-pago')}>
-          <Text style={styles.link}>Opciones de Pagos</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={handleLogout}>
-          <Text style={[styles.link, styles.logout]}>Cerrar sesión</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity style={styles.navButton}>
+        <Text style={styles.navButtonText}>Inicio</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.navButton}>
+        <Text style={styles.navButtonText}>Productos</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.navButton}>
+        <Text style={styles.navButtonText}>Nosotros</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.navButton}>
+        <Text style={styles.navButtonText}>Contacto</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   navbar: {
-    backgroundColor: '#1e40af',
-    paddingTop: 40,
-    paddingBottom: 15,
-    paddingHorizontal: 20,
-  },
-  title: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  linksContainer: {
-    marginTop: 10,
     flexDirection: 'row',
+    backgroundColor: '#f9c5d1',
+    paddingVertical: 12,
+    paddingHorizontal: 10,
     justifyContent: 'space-around',
-    flexWrap: 'wrap',
+    alignItems: 'center',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 5,
   },
-  link: {
-    color: '#fff',
+  navButton: {
+    backgroundColor: '#7c2d12',
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 12,
+    shadowColor: '#7c2d12',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.35,
+    shadowRadius: 4,
+  },
+  navButtonText: {
+    color: '#f9c5d1',
     fontSize: 16,
-    marginVertical: 5,
-    marginHorizontal: 10,
-  },
-  logout: {
     fontWeight: 'bold',
-    color: '#f87171',
+    textAlign: 'center',
   },
 });
+

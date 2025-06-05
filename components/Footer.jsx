@@ -7,13 +7,21 @@ export default function Footer() {
     Linking.openURL(url).catch(err => console.error("No se pudo abrir el enlace:", err));
   };
 
+  const openFacebook = () => {
+    openLink('http://www.carmabeshop.com/');
+  };
+
+  const openInstagram = () => {
+    openLink('https://www.instagram.com/tu_usuario');
+  };
+
   return (
     <View style={styles.footer}>
       <View style={styles.iconContainer}>
-        <TouchableOpacity onPress={() => openLink('https://www.facebook.com/tu_pagina')}>
+        <TouchableOpacity onPress={openFacebook}>
           <FontAwesome name="facebook" size={32} color="#7c2d12" style={styles.icon} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => openLink('https://www.instagram.com/tu_usuario')}>
+        <TouchableOpacity onPress={openInstagram}>
           <FontAwesome name="instagram" size={32} color="#7c2d12" style={styles.icon} />
         </TouchableOpacity>
       </View>
@@ -54,6 +62,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
 });
+
 
 
 
