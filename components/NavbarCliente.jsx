@@ -23,34 +23,37 @@ export default function Navbar() {
 const styles = StyleSheet.create({
   navbar: {
     flexDirection: 'row',
-    backgroundColor: '#f9c5d1',
+    backgroundColor: '#d98cb3', // Fucsia poco intenso
     paddingVertical: 12,
     paddingHorizontal: 10,
     justifyContent: 'space-around',
     alignItems: 'center',
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 5,
+    // Sin sombra ni barra dorada
   },
   navButton: {
-    backgroundColor: '#7c2d12',
+    backgroundColor: '#1a1a1a', // Negro intenso
     paddingVertical: 8,
     paddingHorizontal: 15,
     borderRadius: 12,
-    shadowColor: '#7c2d12',
+    borderWidth: 2,
+    borderColor: '#f9c5d1', // Toque rosado en borde
+    shadowColor: '#f9c5d1',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.35,
+    shadowOpacity: 0.6,
     shadowRadius: 4,
   },
   navButtonText: {
-    color: '#f9c5d1',
+    color: '#f9c5d1', // Texto rosado
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
   },
 });
+
+
+
+
+
 

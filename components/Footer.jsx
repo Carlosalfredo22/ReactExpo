@@ -18,11 +18,11 @@ export default function Footer() {
   return (
     <View style={styles.footer}>
       <View style={styles.iconContainer}>
-        <TouchableOpacity onPress={openFacebook}>
-          <FontAwesome name="facebook" size={32} color="#7c2d12" style={styles.icon} />
+        <TouchableOpacity style={styles.navButton} onPress={openFacebook}>
+          <FontAwesome name="facebook" size={32} color="#f9c5d1" style={styles.icon} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={openInstagram}>
-          <FontAwesome name="instagram" size={32} color="#7c2d12" style={styles.icon} />
+        <TouchableOpacity style={styles.navButton} onPress={openInstagram}>
+          <FontAwesome name="instagram" size={32} color="#f9c5d1" style={styles.icon} />
         </TouchableOpacity>
       </View>
       <Text style={styles.footerText}>
@@ -35,7 +35,7 @@ export default function Footer() {
 const styles = StyleSheet.create({
   footer: {
     padding: 16,
-    backgroundColor: '#f9c5d1',
+    backgroundColor: '#d98cb3', // Fucsia poco intenso
     justifyContent: 'center',
     alignItems: 'center',
     borderTopLeftRadius: 20,
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 14,
-    color: '#7c2d12',
+    color: '#000', // Texto en negro
     fontWeight: 'bold',
     textAlign: 'center',
     marginTop: 8,
@@ -58,10 +58,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
   },
+  navButton: {
+    backgroundColor: '#1a1a1a', // Negro intenso
+    padding: 8,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#f9c5d1', // Toque rosado en borde
+    marginHorizontal: 10,
+  },
   icon: {
-    marginHorizontal: 15,
+    color: '#f9c5d1', // Color rosado para los iconos
   },
 });
+
 
 
 
