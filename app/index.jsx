@@ -1,9 +1,7 @@
-// src/index.jsx
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
-  ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
   Platform,
@@ -12,6 +10,7 @@ import {
   TextInput,
   TouchableOpacity
 } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather'; // Importamos el ícono de Feather
 import httpClient from './api/httpClient';
 
 export default function Login() {
@@ -25,15 +24,23 @@ export default function Login() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+
+  // Estado para controlar el modo oscuro
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Función para alternar entre claro y oscuro
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+  };
+
+  // Obtenemos estilos dinámicos según el modo actual
+  const styles = getStyles(isDarkMode);
 
   const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert('Error', 'Por favor ingresa email y contraseña');
       return;
     }
-
-    setLoading(true);
 
     try {
       const response = await httpClient.post('/login', { email, password });
@@ -78,8 +85,6 @@ export default function Login() {
       } else {
         Alert.alert('Error', 'Ocurrió un error inesperado: ' + error.message);
       }
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -88,71 +93,90 @@ export default function Login() {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
+      {/* Botón de sol/luna para cambiar entre modo claro y oscuro */}
+      <TouchableOpacity style={styles.themeToggle} onPress={toggleTheme}>
+        <Icon
+          name={isDarkMode ? 'sun' : 'moon'} // Cambia entre ícono de sol y luna
+          size={24}
+          color={isDarkMode ? '#fcd34d' : '#1f2937'} // Color del ícono según el modo
+        />
+      </TouchableOpacity>
+
+      {/* Título de la pantalla */}
       <Text style={styles.title}>Iniciar Sesión</Text>
 
+      {/* Campo de correo electrónico */}
       <TextInput
         style={styles.input}
         placeholder="Correo electrónico"
+        placeholderTextColor={isDarkMode ? '#aaa' : '#888'}
         keyboardType="email-address"
         autoCapitalize="none"
         value={email}
         onChangeText={setEmail}
       />
+
+      {/* Campo de contraseña */}
       <TextInput
         style={styles.input}
         placeholder="Contraseña"
+        placeholderTextColor={isDarkMode ? '#aaa' : '#888'}
         secureTextEntry
         value={password}
         onChangeText={setPassword}
       />
 
-      <TouchableOpacity
-        style={[styles.button, loading && { backgroundColor: '#a5b4fc' }]}
-        onPress={handleLogin}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator size="small" color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Ingresar</Text>
-        )}
+      {/* Botón para iniciar sesión */}
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={styles.buttonText}>Ingresar</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 30,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 30,
-    textAlign: 'center',
-  },
-  input: {
-    height: 50,
-    borderColor: '#888',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    marginBottom: 20,
-  },
-  button: {
-    backgroundColor: '#3b82f6',
-    height: 50,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 18,
-  },
-});
+// Función que devuelve los estilos dependiendo del modo claro/oscuro
+const getStyles = (isDarkMode) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      paddingHorizontal: 30,
+      backgroundColor: isDarkMode ? '#121212' : '#fff', // Fondo según tema
+    },
+    themeToggle: {
+      position: 'absolute',
+      top: 50,
+      right: 20, // Esquina superior derecha
+      zIndex: 10,
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: 'bold',
+      marginBottom: 30,
+      textAlign: 'center',
+      color: isDarkMode ? '#fff' : '#000', // Texto según tema
+    },
+    input: {
+      height: 50,
+      borderColor: isDarkMode ? '#aaa' : '#888',
+      borderWidth: 1,
+      borderRadius: 8,
+      paddingHorizontal: 15,
+      marginBottom: 20,
+      backgroundColor: isDarkMode ? '#1e1e1e' : '#fff',
+      color: isDarkMode ? '#fff' : '#000',
+    },
+    button: {
+      backgroundColor: '#3b82f6',
+      height: 50,
+      borderRadius: 8,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 10,
+    },
+    buttonText: {
+      color: '#fff',
+      fontWeight: 'bold',
+      fontSize: 18,
+    },
+  });
