@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Footer from '../components/Footer'; // Asegúrate de que exista
-import NavbarCliente from '../components/NavbarCliente'; // Asegúrate de que exista
+import Footer from '../components/Footer';
+import NavbarCliente from '../components/NavbarCliente';
 
 export default function HomeCliente() {
   const router = useRouter();
@@ -22,11 +22,14 @@ export default function HomeCliente() {
       <NavbarCliente />
 
       <View style={styles.content}>
-        <Text style={styles.title}>Bienvenido a la Página de Inicio para clientes</Text>
-        <Text style={styles.text}>Has iniciado sesión correctamente.</Text>
+        <Text style={styles.title}>¡Hola! Estamos felices de verte aquí.</Text>
+        <Text style={styles.text}>
+          En Carmabe Shop, valoramos tu presencia y estamos comprometidos a ofrecerte la mejor experiencia. 
+          Tu satisfacción es nuestra prioridad, y estamos aquí para ayudarte en todo lo que necesites.
+        </Text>
 
         <TouchableOpacity style={styles.button} onPress={handleLogout}>
-          <Text style={styles.buttonText}>Cerrar sesión</Text>
+          <Text style={styles.buttonText}>Salir</Text>
         </TouchableOpacity>
       </View>
 
@@ -39,6 +42,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
+    backgroundColor: '#fff', // Fondo blanco
   },
   content: {
     flex: 1,
@@ -51,21 +55,28 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center',
+    color: '#1a1a1a',
   },
   text: {
     fontSize: 16,
-    marginBottom: 30,
+    marginBottom: 40, // Más espacio para separar del botón
     textAlign: 'center',
+    color: '#1a1a1a',
   },
   button: {
-    backgroundColor: '#ef4444',
+    backgroundColor: '#1a1a1a',
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#f9c5d1',
+    marginBottom: 20, // Espacio extra abajo del botón
   },
   buttonText: {
-    color: '#fff',
+    color: '#f9c5d1',
     fontWeight: 'bold',
     fontSize: 16,
   },
 });
+
+
