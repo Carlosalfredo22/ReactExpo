@@ -1,11 +1,23 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
+import { useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Footer from '../components/Footer';
 import NavbarCliente from '../components/NavbarCliente';
 
 export default function HomeCliente() {
   const router = useRouter();
+
+  // Verificar token al montar la pantalla
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        router.replace('/'); // Redirige a login si no hay token
+      }
+    };
+    checkToken();
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -78,5 +90,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
-

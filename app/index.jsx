@@ -56,7 +56,7 @@ export default function Login() {
         Alert.alert('Bienvenido', 'Acceso concedido como cliente');
  
         if (router) {
-          router.replace('/homecliente');
+          router.replace('/cliente/categorias');
         } else {
           Alert.alert('Error', 'No se pudo navegar: router no disponible');
         }
